@@ -1,9 +1,10 @@
-import { AuthPage, type AuthProps } from "@refinedev/antd";
+import {  type AuthProps } from "@refinedev/antd";
 import React from "react";
 import { WindowsFilled } from "@ant-design/icons";
 import { createStyles } from "antd-style";
 import LogoCompany from "@/assets/logo-tob.png";
 import BackgroundLogin from "@/assets/background-login.jpg";
+import { LoginPage as AuthPage } from "@/components";
 
 const authWrapperProps = {
   style: {
@@ -42,7 +43,7 @@ export const LoginPage: React.FC<AuthProps> = () => {
   const { styles } = useStyles();
   return (
     <AuthPage
-      type="login"
+      // type="login"
       wrapperProps={authWrapperProps}
       renderContent={renderAuthContent}
       contentProps={{
@@ -63,7 +64,7 @@ export const LoginPage: React.FC<AuthProps> = () => {
         {
           name: "microsoft",
           label: "Microsoft",
-          icon: <WindowsFilled />,
+          icon: <WindowsFilled />,      
         },
       ]}
     />

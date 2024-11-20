@@ -16,6 +16,7 @@ import { FullScreenLoading } from "@/components/ui";
 import { resources } from "./resources";
 import { PublicRoutes } from "./routes/public-routes";
 import { router } from "./routes";
+// import { useLocation } from "react-router-dom";
 
 export const RootRouter = createBrowserRouter([
   {
@@ -28,6 +29,7 @@ export const RootRouter = createBrowserRouter([
 
 
 function App() {
+  // const location = useLocation();
   return (
     <AntdApp>
       <DevtoolsProvider>
@@ -53,7 +55,28 @@ function App() {
           <BaseLayout>
             <Outlet />
             <UnsavedChangesNotifier />
-            <DocumentTitleHandler />
+            <DocumentTitleHandler
+            handler={({ action, params, resource }) => {
+              const id = params?.id ?? "";
+              const loginPage = location.pathname.startsWith("/login");
+              
+              if (loginPage) {
+                return "Login | FR";
+              }
+              
+              const actionPrefixMatcher = {
+                create: `Create New ${resource?.meta?.label}`,
+                clone: `#${id} Clone ${resource?.meta?.label}`,
+                edit: `#${id} Edit ${resource?.meta?.label}`,
+                show: `#${id} Show ${resource?.meta?.label}`,
+                list: `${resource?.meta?.label}`,
+              };
+  
+              const suffix = " | FR";
+              const title = actionPrefixMatcher[action || "list"] + suffix;
+  
+              return title;
+              }} />
           </BaseLayout>
         </Refine>
         <DevtoolsPanel />

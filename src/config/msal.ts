@@ -47,28 +47,44 @@ const msalConfig: Configuration = {
 export const msalInstance = new PublicClientApplication(msalConfig);
 
 msalInstance.addEventCallback(async (event) => {
-  if (event.eventType === EventType.LOGIN_SUCCESS) {
+  if (event.eventType === EventType.LOGIN_SUCCESS || event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
     const payload: EventPayload = event.payload;
     msalInstance.setActiveAccount(payload as AccountInfo);
 
-    const account = msalInstance.getActiveAccount();
-    const request: SilentRequest = {
-      ...tokenRequest,
-      account: account == null ? undefined : account,
-    };
-    try {
-      const response = await msalInstance.acquireTokenSilent(request);
-      localStorage.setItem(TOKEN_KEY, response.accessToken);
-    } catch (e) {
-      msalInstance.acquireTokenPopup(request).then((response) => {
-        localStorage.setItem(TOKEN_KEY, response.accessToken);
-      });
-    }
+    await acquireAndStoreToken();
   }
-  if (event.eventType === EventType.ACQUIRE_TOKEN_SUCCESS) {
-    msalInstance.setActiveAccount(event.payload as AccountInfo);
+  if (event.eventType === EventType.LOGOUT_SUCCESS) {
+    localStorage.removeItem(TOKEN_KEY);
   }
 });
+
+async function acquireAndStoreToken() {
+  const account = msalInstance.getActiveAccount();
+  if (!account) {
+    console.error("No active account! Verify a user is signed in and setActiveAccount has been called.");
+    return;
+  }
+
+  const request: SilentRequest = {
+    ...tokenRequest,
+    account: account,
+  };
+
+  try {
+    const response = await msalInstance.acquireTokenSilent(request);
+    localStorage.setItem(TOKEN_KEY, response.accessToken);
+    console.log("Token acquired successfully", response);
+  } catch (e) {
+    console.error("Silent token acquisition failed, acquiring token using popup", e);
+    try {
+      const response = await msalInstance.acquireTokenPopup(request);
+      localStorage.setItem(TOKEN_KEY, response.accessToken);
+      console.log("Token acquired successfully using popup", response);
+    } catch (popupError) {
+      console.error("Error acquiring token using popup", popupError);
+    }
+  }
+}
 
 export const loginRequest = {
   scopes: [VITE_AUTH_AZURE_SCOPE],
