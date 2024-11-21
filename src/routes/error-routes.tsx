@@ -1,6 +1,7 @@
 import { themeConfig, GlobalStyle } from "@/config/antd";
 import { ContentLayout } from "../components/layout";
-import { Authenticated, ErrorComponent } from "@refinedev/core";
+import { Authenticated } from "@refinedev/core";
+import { ErrorComponent } from "@refinedev/antd";
 import { ConfigProvider } from "antd";
 import { Outlet, RouteObject } from "react-router-dom";
 

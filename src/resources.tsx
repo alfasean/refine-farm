@@ -46,6 +46,10 @@ export const resources: IResourceItem[] = [
     meta: {
       label: "Menu 1",
       icon: <OrderedListOutlined />,
+      // authorization: {
+      //   resource: "menu-1",
+      //   action: "menu",
+      // },
     }
   },
   {
