@@ -1,29 +1,33 @@
 import { AxiosInstance, isAxiosError } from "axios";
 import { AccessControlProvider } from "@refinedev/core";
 import { axiosAuth } from "@/config";
+import { DOMAIN_APP } from "@/constants";
+import { IUser } from "@/interfaces";
 
-const { VITE_DOMAIN_APP: VITE_DOMAIN_APP } = import.meta.env;
+// const { VITE_DOMAIN_APP: VITE_DOMAIN_APP } = import.meta.env;
 
-if (!VITE_DOMAIN_APP) {
-  throw new Error("DOMAIN_APP is not defined");
-}
+// if (!VITE_DOMAIN_APP) {
+//   throw new Error("DOMAIN_APP is not defined");
+// }
+
 
 type CheckPermissionResponse = {
   isAllowed: boolean;
 };
-const accessControlProviderFactory = (
-  httpClient: AxiosInstance
+
+export const accessControlProvider = (
+  httpClient: AxiosInstance,
+  user: IUser | undefined
 ): AccessControlProvider => ({
   can: async ({ resource, action, params }) => {
     try {
-      console.log(resource, action, params);
       const resp = await httpClient.get<CheckPermissionResponse>(
         "permissions/check",
         {
           params: {
-            domain: VITE_DOMAIN_APP,
+            domain: DOMAIN_APP,
             resource: resource,
-            subject: "DPL",
+            subject: user?.id,
             action: action,
           },
         }
@@ -59,4 +63,3 @@ const accessControlProviderFactory = (
     },
   },
 });
-export const accessControlProvider = accessControlProviderFactory(axiosAuth);

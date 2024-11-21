@@ -1,22 +1,25 @@
-import { Refine } from "@refinedev/core";
+import { Refine, AuthProvider } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { useNotificationProvider } from "@refinedev/antd";
-
 import "@refinedev/antd/dist/reset.css";
-
 import { App as AntdApp } from "antd";
 import { createBrowserRouter, Outlet } from "react-router-dom";
 import routerProvider, { DocumentTitleHandler, UnsavedChangesNotifier, } from "@refinedev/react-router-v6";
 import { userAtom } from "./stores";
 import { useAtom } from "jotai";
 import { useMsal } from "@azure/msal-react";
+import { SilentRequest } from "@azure/msal-browser";
 import { queryClient } from "@/config";
-import { dataProvider, accessControlProvider, authProvider } from "@/providers";
+import { dataProvider, accessControlProvider } from "@/providers";
 import { FullScreenLoading } from "@/components/ui";
 import { resources } from "./resources";
 import { PublicRoutes } from "./routes/public-routes";
 import { router } from "./routes";
-// import { useLocation } from "react-router-dom";
+import { TOKEN_KEY } from "./constants";
+import { tokenRequest } from "@/config";
+import { IUser } from "./interfaces";
+import { checkUser } from "./utils";
+import { axiosInstanceAuth } from "@/axiosInstances";
 
 export const RootRouter = createBrowserRouter([
   {
@@ -29,7 +32,78 @@ export const RootRouter = createBrowserRouter([
 
 
 function App() {
-  // const location = useLocation();
+  const { instance, inProgress } = useMsal();
+  const [user, setUser] = useAtom(userAtom);
+  if (inProgress === "login" || inProgress === "handleRedirect") {
+    return <FullScreenLoading />;
+  }
+  const authProvider: AuthProvider = {
+    login: async () => {
+      await instance.loginRedirect(); // Pick the strategy you prefer i.e. redirect or popup
+      return {
+        success: true,
+      };
+    },
+    register: async () => ({
+      success: true,
+    }),
+    updatePassword: async () => ({
+      success: true,
+    }),
+    logout: async () => {
+      localStorage.removeItem(TOKEN_KEY);
+      instance.setActiveAccount(null);
+      setUser(undefined);
+      return {
+        success: true,
+        redirectTo: "/login",
+      };
+    },
+    check: async () => {
+      try {
+        const account = instance.getActiveAccount();
+        if (account === null) {
+          return {
+            authenticated: false,
+            redirectTo: "/login",
+          };
+        }
+        const request: SilentRequest = {
+          ...tokenRequest,
+          account: account,
+        };
+
+        const token = await instance.acquireTokenSilent(request);
+        localStorage.setItem(TOKEN_KEY, token.accessToken);
+        const checkUserResp = await checkUser();
+        if (
+          checkUserResp.status === "authorized" &&
+          checkUserResp.user !== undefined
+        ) {
+          setUser(checkUserResp.user);
+          return { authenticated: true };
+        }
+        setUser(undefined);
+        return {
+          authenticated: false,
+        };
+      } catch (e) {
+        console.log(e);
+        return {
+          authenticated: false,
+        };
+      }
+    },
+    onError: async (error) => {
+      console.error(error);
+      return { error };
+    },
+    getPermissions: async () => null,
+    getIdentity: async (): Promise<IUser | undefined> => {
+      return user;
+    },
+  };
+
   return (
     <AntdApp>
       <DevtoolsProvider>
@@ -50,7 +124,7 @@ function App() {
             },
           }}
           resources={resources}
-          accessControlProvider={accessControlProvider}
+          accessControlProvider={accessControlProvider(axiosInstanceAuth, user)}
         >
           <BaseLayout>
             <Outlet />

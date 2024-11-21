@@ -25,4 +25,15 @@ export const resources: IResourceItem[] = [
       icon: <FolderAddFilled />,
     },
   },
+  {
+    name: "report",
+    identifier: "report",
+    list: "/report",
+    create: "/report/create",
+    edit: "/report/:id",
+    meta: {
+      label: "Report",
+      icon: <OrderedListOutlined />,
+    },
+  }
 ];

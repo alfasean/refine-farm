@@ -1,11 +1,13 @@
 import { themeConfig, GlobalStyle } from "@/config";
 import { ContentLayout } from "@/components/layout";
 import { DashboardPage } from "@/pages/dashboard";
+import ReportPage from "@/pages/report/list";
 import { Authenticated } from "@refinedev/core";
 import { CatchAllNavigate } from "@refinedev/react-router-v6";
 import { ConfigProvider } from "antd";
 import { Outlet, RouteObject } from "react-router-dom";
 import { cooperationAgreementTypeRouter } from "@/pages/cooperation-agreement-type";
+import { reporteRouter } from "@/pages/report";
 
 export const ProtectedRoutes: RouteObject[] = [
   {
@@ -30,6 +32,7 @@ export const ProtectedRoutes: RouteObject[] = [
         element: <DashboardPage />,
       },
       ...cooperationAgreementTypeRouter,
+      ...reporteRouter,
     ],
   }
 ];

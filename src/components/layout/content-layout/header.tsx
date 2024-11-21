@@ -1,5 +1,3 @@
-"use client";
-
 import type { RefineThemedLayoutV2HeaderProps } from "@refinedev/antd";
 import {
   Layout as AntdLayout,
@@ -8,12 +6,15 @@ import {
   Typography,
 } from "antd";
 import React from "react";
+import { useGetIdentity } from "@refinedev/core";
+import { IUser } from "@/interfaces";
+
 const { Text } = Typography;
 const { useToken } = theme;
 export const HeaderContent: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   sticky = true,
 }) => {
-  // const { data: session, status } = useSession();
+  const { data: user } = useGetIdentity<IUser>();
   const { token } = useToken();
 
   // const { data: photo, isLoading: isLoadingPhoto } = useOne<IUserPhoto>({
@@ -38,20 +39,11 @@ export const HeaderContent: React.FC<RefineThemedLayoutV2HeaderProps> = ({
   return (
     <AntdLayout.Header style={headerStyles}>
       <Space>
-        {/* {(session?.user?.name) && (
-          <Space style={{ marginLeft: "8px" }} size="middle">
-            {session?.user?.name && session?.user?.email &&
-              <>
-                <Text strong>
-                  {session.user.name}
-                </Text>
-              </>
-            }
-            {!isLoadingPhoto && photo &&
-              <Avatar src={photo?.data.avatar} alt={"Avatar"} />
-            }
-          </Space>
-        )} */}
+        <Space style={{marginLeft: "8px"}} size="middle">
+          {user?.name && <Text strong>{user.name}</Text>}
+          {/*{user?.avatar && <Avatar src={avatar} alt={user?.name}/>}*/}
+          {/*<SkeletonAvatar active={true} size="small"/>*/}
+        </Space>
       </Space>
     </AntdLayout.Header>
   );
