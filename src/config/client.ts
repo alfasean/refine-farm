@@ -1,6 +1,7 @@
 import { QueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { TOKEN_KEY } from "@/constants";
+import { axiosInstanceApp, axiosInstanceAuth } from "@/axiosInstances";
 
 export const queryClient = new QueryClient();
 

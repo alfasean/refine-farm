@@ -8,6 +8,10 @@ export interface IUser {
   avatar: string;
 }
 
+export interface IRole {
+  [key: string]: any;
+}
+
 export interface ICheckUser {
   user?: IUser;
   status: "authorized" | "unauthorized" | "error";

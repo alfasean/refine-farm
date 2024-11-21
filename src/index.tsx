@@ -54,7 +54,9 @@ export const queryClient = new QueryClient({
   },
 });
 
-const root = createRoot(document.getElementById('root')!);
+const container = document.getElementById("root");
+const root = createRoot(container!);
+msalInstance.initialize();
 root.render(
   <React.StrictMode>
     <React.Suspense>

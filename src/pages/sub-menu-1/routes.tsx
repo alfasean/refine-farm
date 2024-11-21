@@ -2,21 +2,21 @@ import { lazy } from "react";
 import { CanAccessRoute } from "@/components/ui/can-access/can-access-route";
 import { SuspenseList } from "@/components/ui/suspense";
 
-const ReportList = lazy(
-  () => import("@/pages/report/list")
+const SubMenu1 = lazy(
+  () => import("@/pages/sub-menu-1/list")
 );
 
-export const reporteRouter = [
-  { 
-    path: "/report",
+export const subMenu1Router = [
+  {
+    path: "/sub-menu-1",
     element: (
       <CanAccessRoute
-        resource={"report"}
+        resource={"sub-menu-1"}
         action={"list"}>
-          <SuspenseList>
-            <ReportList />
-          </SuspenseList>
+        <SuspenseList>
+          <SubMenu1 />
+        </SuspenseList>
       </CanAccessRoute>
     )
-  },
+    },
 ];

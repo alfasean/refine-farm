@@ -1,5 +1,5 @@
 import React, { PropsWithChildren, Suspense } from "react";
-import { SkeletonList } from "@/components";
+import { SkeletonList } from "@/components/ui/skeleton/list";
 
 export const SuspenseList: React.FC<PropsWithChildren<{ fallback?: React.ReactNode }>> = ({
   children,

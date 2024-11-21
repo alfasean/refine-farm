@@ -1,3 +1,3 @@
 export const TOKEN_KEY = "access-token";
-export const TITLE_APP = "TEMPLATE REFINE";
-export const DOMAIN_APP = "shield-uat"
+export const TITLE_APP = "Financial Report";
+export const DOMAIN_APP = "financial-report-dev"

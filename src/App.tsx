@@ -19,7 +19,7 @@ import { TOKEN_KEY } from "./constants";
 import { tokenRequest } from "@/config";
 import { IUser } from "./interfaces";
 import { checkUser } from "./utils";
-import { axiosInstanceAuth } from "@/axiosInstances";
+import { axiosInstanceApp, axiosInstanceAuth } from "@/axiosInstances";
 
 export const RootRouter = createBrowserRouter([
   {
@@ -110,7 +110,7 @@ function App() {
         <Refine
           routerProvider={routerProvider}
           dataProvider={{
-            default: dataProvider,
+            default: dataProvider
           }}
           authProvider={authProvider}
           notificationProvider={useNotificationProvider}

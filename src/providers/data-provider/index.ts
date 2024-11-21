@@ -4,6 +4,7 @@ import { DataProvider, LogicalFilter } from "@refinedev/core";
 import { generateSort } from "./generateSort";
 import { generateFilter } from "./generateFilter";
 import { axiosApp } from "@/config";
+import { axiosInstanceApp } from "@/axiosInstances";
 
 type MethodTypes = "get" | "delete" | "head" | "options";
 type MethodTypesWithBody = "post" | "put" | "patch";
@@ -217,4 +218,4 @@ const dataProviderFactory = (
     return Promise.resolve({ data });
   },
 });
-export const dataProvider = dataProviderFactory(axiosApp);
+export const dataProvider = dataProviderFactory(axiosInstanceApp);
