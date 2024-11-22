@@ -134,8 +134,13 @@ function App() {
               const id = params?.id ?? "";
               const loginPage = location.pathname.startsWith("/login");
               
+              
               if (loginPage) {
                 return "Login | FR";
+              } 
+
+              if (!resource?.meta?.label) {
+                return "Not Found | FR";
               }
               
               const actionPrefixMatcher = {
@@ -145,7 +150,7 @@ function App() {
                 show: `#${id} Show ${resource?.meta?.label}`,
                 list: `${resource?.meta?.label}`,
               };
-  
+
               const suffix = " | FR";
               const title = actionPrefixMatcher[action || "list"] + suffix;
   
