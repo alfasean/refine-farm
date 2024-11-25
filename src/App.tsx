@@ -1,4 +1,4 @@
-import { Refine, AuthProvider } from "@refinedev/core";
+import { Refine, AuthProvider, useGetIdentity } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { useNotificationProvider } from "@refinedev/antd";
 import "@refinedev/antd/dist/reset.css";
@@ -19,11 +19,13 @@ import { TOKEN_KEY } from "./constants";
 import { tokenRequest } from "@/config";
 import { IUser } from "./interfaces";
 import { checkUser } from "./utils";
-import { axiosInstanceApp, axiosInstanceAuth } from "@/axiosInstances";
+import { axiosInstanceApp, axiosInstanceAuth } from "@/axiosInstances"; 
+import ErrorElement from "./routes/error-element";
 
 export const RootRouter = createBrowserRouter([
   {
     element: <App />,
+    errorElement: <ErrorElement />,
     children: [
       ...router
     ],

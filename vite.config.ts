@@ -30,8 +30,8 @@ export default defineConfig({
         enabled: true,
       },
       manifest: {
-        name: 'React Vite',
-        short_name: 'React Vite',
+        name: 'Financial Report',
+        short_name: 'Financial Report',
         theme_color: '#000000',
         icons: [
           {
